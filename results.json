@@ -1,0 +1,95 @@
+{
+  "timestamp": "2026-03-31T22:16:53.916879",
+  "model": "gemini-2.5-flash",
+  "test_cases": [
+    {
+      "case_number": 1,
+      "case_name": "Case 1 - Normal Case",
+      "input": "Alright, quick updates. John finished the frontend login page. Sarah, can you finalize the API integration by Friday? Also, we need someone to prepare slides for Monday's client meeting. Mike, can you take that? Oh and we should fix the payment bug reported yesterday.",
+      "raw_response": "```json\n[\n  {\n    \"task\": \"finalize the API integration\",\n    \"owner\": \"Sarah\",\n    \"deadline\": \"Friday\"\n  },\n  {\n    \"task\": \"prepare slides for Monday's client meeting\",\n    \"owner\": \"Mike\",\n    \"deadline\": \"Monday\"\n  },\n  {\n    \"task\": \"fix the payment bug reported yesterday\",\n    \"owner\": null,\n    \"deadline\": null\n  }\n]\n```",
+      "extracted_items": [
+        {
+          "task": "finalize the API integration",
+          "owner": "Sarah",
+          "deadline": "Friday"
+        },
+        {
+          "task": "prepare slides for Monday's client meeting",
+          "owner": "Mike",
+          "deadline": "Monday"
+        },
+        {
+          "task": "fix the payment bug reported yesterday",
+          "owner": null,
+          "deadline": null
+        }
+      ],
+      "error": null
+    },
+    {
+      "case_number": 2,
+      "case_name": "Case 2 - Noisy Input",
+      "input": "Hey everyone, how was your weekend? Mine was great. Anyway, let's get started. So yeah, the marketing campaign is doing okay. We might want to improve the landing page. Not urgent though. Also, I think we should probably review the analytics dashboard sometime this week.",
+      "raw_response": "```json\n[\n  {\n    \"task\": \"Review the analytics dashboard\",\n    \"owner\": null,\n    \"deadline\": \"this week\"\n  }\n]\n```",
+      "extracted_items": [
+        {
+          "task": "Review the analytics dashboard",
+          "owner": null,
+          "deadline": "this week"
+        }
+      ],
+      "error": null
+    },
+    {
+      "case_number": 3,
+      "case_name": "Case 3 - Hallucination Risk",
+      "input": "We discussed several ideas about improving user retention. Maybe onboarding could be better. Some people mentioned emails, but nothing is decided yet.",
+      "raw_response": "[]",
+      "extracted_items": [],
+      "error": null
+    },
+    {
+      "case_number": 4,
+      "case_name": "Case 4 - Multi-Task",
+      "input": "Okay, let's align on next steps. Alice will redesign the dashboard UI by next Wednesday. Bob and Charlie will work together on database optimization, no strict deadline yet. Also, we need to hire a new backend engineer—HR team should start drafting the job description.",
+      "raw_response": "```json\n[\n  {\n    \"task\": \"Redesign the dashboard UI\",\n    \"owner\": \"Alice\",\n    \"deadline\": \"next Wednesday\"\n  },\n  {\n    \"task\": \"Work on database optimization\",\n    \"owner\": \"Bob and Charlie\",\n    \"deadline\": null\n  },\n  {\n    \"task\": \"Start drafting the job description for a new backend engineer\",\n    \"owner\": \"HR team\",\n    \"deadline\": null\n  }\n]\n```",
+      "extracted_items": [
+        {
+          "task": "Redesign the dashboard UI",
+          "owner": "Alice",
+          "deadline": "next Wednesday"
+        },
+        {
+          "task": "Work on database optimization",
+          "owner": "Bob and Charlie",
+          "deadline": null
+        },
+        {
+          "task": "Start drafting the job description for a new backend engineer",
+          "owner": "HR team",
+          "deadline": null
+        }
+      ],
+      "error": null
+    },
+    {
+      "case_number": 5,
+      "case_name": "Case 5 - Long Context",
+      "input": "Let's go through updates. Sales numbers are up 10%, which is great. The customer feedback indicates issues with checkout speed. We should investigate that. Also, the mobile app crash reported last week still hasn't been fixed—can someone take ownership? David, can you look into that by Thursday? Lastly, we might explore AI features in Q3.",
+      "raw_response": "```json\n[\n  {\n    \"task\": \"Investigate issues with checkout speed\",\n    \"owner\": null,\n    \"deadline\": null\n  },\n  {\n    \"task\": \"Look into the mobile app crash\",\n    \"owner\": \"David\",\n    \"deadline\": \"Thursday\"\n  }\n]\n```",
+      "extracted_items": [
+        {
+          "task": "Investigate issues with checkout speed",
+          "owner": null,
+          "deadline": null
+        },
+        {
+          "task": "Look into the mobile app crash",
+          "owner": "David",
+          "deadline": "Thursday"
+        }
+      ],
+      "error": null
+    }
+  ]
+}
