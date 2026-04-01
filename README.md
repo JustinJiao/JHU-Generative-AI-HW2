@@ -1,6 +1,4 @@
-
-
-## realistic business workflow
+# realistic business workflow
 1. summarizing meetings into action items
 2. Everyone is a user, because everyone who attends a meeting faces a similar challenge: turning the points raised in the meeting into concrete to-do items.
 3. Input: The system will be fed a lengthy text that may contain a variety of content, such as small talk or updates on project progress; however, the system needs to identify the relevant sections and list them out.
@@ -56,3 +54,6 @@
    ```bash
    deactivate
    ```
+
+## Video
+[Watch the video](https://youtu.be/UdEVmoj_HwU)
