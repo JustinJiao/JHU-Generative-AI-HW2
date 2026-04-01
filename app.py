@@ -4,13 +4,13 @@ from datetime import datetime
 from dotenv import load_dotenv
 import google.generativeai as genai
 
-# 加载 .env 文件
+# Load .env file
 load_dotenv()
 
-# 配置 Gemini API
+# Configure Gemini API
 genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 
-# Prompt 模板 - 可以直接在这里修改
+# Prompt template - can be modified directly here
 PROMPT_TEMPLATE = """You are an AI assistant that extracts action items from meeting transcripts.
 
 Given a meeting transcript, extract all actionable to-do items.
@@ -39,7 +39,7 @@ Meeting transcript:
 {transcript}
 """
 
-# 测试集 - 从 eval_set.md 中提取的测试用例
+# Test set - test cases extracted from eval_set.md
 test_cases = [
     {
         "name": "Case 1 - Normal Case",
@@ -65,11 +65,11 @@ test_cases = [
 
 
 def extract_action_items(transcript, model_name="gemini-2.5-flash"):
-    """使用 Gemini 提取行动项"""
-    # 填充模板
+    """Extract action items using Gemini"""
+    # Fill in the template
     prompt = PROMPT_TEMPLATE.replace("{transcript}", transcript)
 
-    # 调用 Gemini API
+    # Call Gemini API
     model = genai.GenerativeModel(model_name)
     response = model.generate_content(prompt)
 
@@ -77,9 +77,9 @@ def extract_action_items(transcript, model_name="gemini-2.5-flash"):
 
 
 def parse_json_response(response_text):
-    """解析 JSON 响应"""
+    """Parse JSON response"""
     try:
-        # 尝试提取 JSON（可能包含在 markdown 代码块中）
+        # Try to extract JSON (may be contained in markdown code blocks)
         if "```json" in response_text:
             start = response_text.find("```json") + 7
             end = response_text.find("```", start)
@@ -100,9 +100,9 @@ def parse_json_response(response_text):
 
 
 def run_evaluation(output_file="results.json"):
-    """运行评估并保存结果到 JSON 文件"""
+    """Run evaluation and save results to JSON file"""
     print("=" * 60)
-    print("开始评估 - Meeting Action Items Extraction")
+    print("Starting Evaluation - Meeting Action Items Extraction")
     print("=" * 60)
     print()
 
@@ -114,7 +114,7 @@ def run_evaluation(output_file="results.json"):
 
     for i, test_case in enumerate(test_cases, 1):
         print(f"\n{'=' * 60}")
-        print(f"测试用例 {i}: {test_case['name']}")
+        print(f"Test Case {i}: {test_case['name']}")
         print(f"{'=' * 60}")
 
         result = {
@@ -127,49 +127,49 @@ def run_evaluation(output_file="results.json"):
         }
 
         try:
-            # 调用 Gemini
+            # Call Gemini
             response = extract_action_items(test_case['transcript'])
             result["raw_response"] = response
 
-            print(f"✓ Gemini 响应已获取")
+            print(f"✓ Gemini response received")
 
-            # 解析 JSON
+            # Parse JSON
             action_items = parse_json_response(response)
 
             if isinstance(action_items, list):
                 result["extracted_items"] = action_items
-                print(f"✓ 提取了 {len(action_items)} 个行动项")
+                print(f"✓ Extracted {len(action_items)} action items")
             elif isinstance(action_items, dict) and "error" in action_items:
                 result["error"] = action_items["error"]
                 result["extracted_items"] = []
-                print(f"✗ JSON 解析失败: {action_items['error']}")
+                print(f"✗ JSON parsing failed: {action_items['error']}")
             else:
                 result["extracted_items"] = action_items
-                print(f"✓ 响应已解析")
+                print(f"✓ Response parsed")
 
         except Exception as e:
             result["error"] = str(e)
-            print(f"✗ 错误: {e}")
+            print(f"✗ Error: {e}")
 
         results["test_cases"].append(result)
 
-    # 保存结果到 JSON 文件
+    # Save results to JSON file
     with open(output_file, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2, ensure_ascii=False)
 
     print(f"\n{'=' * 60}")
-    print(f"✓ 评估完成！结果已保存到: {output_file}")
+    print(f"✓ Evaluation complete! Results saved to: {output_file}")
     print(f"{'=' * 60}")
 
     return results
 
 
 if __name__ == "__main__":
-    # 检查 API key
+    # Check API key
     if not os.environ.get("GEMINI_API_KEY"):
-        print("错误: 请设置 GEMINI_API_KEY 环境变量")
-        print("提示: 在 .env 文件中添加: GEMINI_API_KEY=your-api-key")
+        print("Error: Please set GEMINI_API_KEY environment variable")
+        print("Hint: Add to .env file: GEMINI_API_KEY=your-api-key")
         exit(1)
 
-    # 运行评估
+    # Run evaluation
     run_evaluation()
